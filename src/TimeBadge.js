@@ -1,10 +1,10 @@
 import MessageBubble from './MessageBubble';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 const TimeBadge = ({ messages, userId }) => {
     function groupMessagesByDate(messages) {
         return messages.reduce((groups, message) => {
-          const messageDate = new Date(message.time).toLocaleDateString();
+          const messageDate = new Date(message.time).toISOString().split('T')[0];
           if (!groups[messageDate]) {
             groups[messageDate] = [];
           }
@@ -18,7 +18,7 @@ const TimeBadge = ({ messages, userId }) => {
         const yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
 
-        const messageDate = new Date(date);
+        const messageDate = parseISO(date);
 
         if (messageDate.toDateString() === today.toDateString()) {
             return 'Today';
