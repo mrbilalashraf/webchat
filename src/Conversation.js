@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import {onSnapshot, addDoc } from 'firebase/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import db from './firebase';
-import MessageBubble from './MessageBubble';
-import { useParams } from 'react-router-dom';
+import TimeBadge from './TimeBadge';
 
 const Conversation = () => {
   const [messages, setMessages] = useState([]);
+  const [userId, setUserId] = useState('');
 
   const currentUrl = window.location.href;
   const subStrings = currentUrl.split('conversation/');
   const conversationParams = subStrings[1];
   const userParam = conversationParams.split('-');
   const convId = userParam[0];
-  const userId = userParam[1];
+  const username = userParam[1];
 
   useEffect(() => {
     const messageQuery = convId
@@ -26,6 +26,7 @@ const Conversation = () => {
         setMessages(messagesData);
     });
 
+    setUserId(username);
     return () => unsubscribe();
   }, [convId]);
 
@@ -62,15 +63,7 @@ const Conversation = () => {
     <div className="conversation">
       <h2>Anonymous Chat</h2>
       <ul className='list'>
-        {messages.map((message) => (
-          <li key={message.id}>
-            <MessageBubble
-              senderId={message.senderId}
-              userId={userId}
-              msg={message.msg}
-            />
-          </li>
-        ))}
+      <TimeBadge messages={messages} userId={userId} />
       </ul>
       <form onSubmit={handleSendMessage}>
         <input type="text" name="message" placeholder="Enter your message" />
