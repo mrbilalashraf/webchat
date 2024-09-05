@@ -1,4 +1,5 @@
 import MessageBubble from './MessageBubble';
+import { format } from 'date-fns';
 
 const TimeBadge = ({ messages, userId }) => {
     function groupMessagesByDate(messages) {
@@ -24,9 +25,7 @@ const TimeBadge = ({ messages, userId }) => {
         } else if (messageDate.toDateString() === yesterday.toDateString()) {
             return 'Yesterday';
         } else {
-            const options = { year: 'numeric', month: 'long', day: '2-digit' };
-            const formattedDate = new Intl.DateTimeFormat('en-US', options).format(messageDate);
-            return formattedDate;
+            return format(messageDate, 'MMMM dd, yyyy');
         }
     }
 
