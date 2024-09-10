@@ -1,7 +1,7 @@
 import MessageBubble from './MessageBubble';
 import { format, parseISO } from 'date-fns';
 
-const TimeBadge = ({ messages, userId }) => {
+const TimeBadge = ({ messages, userId, sender }) => {
     function groupMessagesByDate(messages) {
         return messages.reduce((groups, message) => {
           const messageDate = new Date(message.time).toISOString().split('T')[0];
@@ -34,16 +34,16 @@ const TimeBadge = ({ messages, userId }) => {
       return (
         <div>
       {Object.keys(groupedMessages).map((date) => (
-        <div key={date}>
-          <div className="date-badge" style={{ backgroundColor: '#71c4f5', color: 'white', padding: '5px', margin: '10px 0' }}>
+        <div className='list' key={date}>
+          <div className="date-badge" >
             {formatDateLabel(date)}
           </div>
           {groupedMessages[date].map((message) => (
-          <li key={message.id}>
-            <MessageBubble
-              senderId={message.senderId}
-              userId={userId}
+          <li className={`message ${message.senderId === userId ? 'message-right' : 'message-left'}`} key={message.id}>
+            <MessageBubble 
+              sender={sender}             
               msg={message.msg}
+              time={message.time}
             />
           </li>
         ))}

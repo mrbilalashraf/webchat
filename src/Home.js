@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, setDoc, collection } from 'firebase/firestore';
 import db from './firebase';
+import { signInWithGooglePopup } from './google_signin';
+import { AuthContext } from './AuthContext';
 
 const Home = () => {
-  const [username, setUsername] = useState('');
-  const [isChatEnabled, setIsChatEnabled] = useState(false);
+  const { currentUser, isSignedIn, setIsSignedIn } = useContext(AuthContext);
   const [convId, setConvId] = useState('');
   const navigate = useNavigate();
-
-  const handleSave = async () => {
-    try {
-      await setDoc(doc(db, "Users", username), {
-        userId: username
-      });
-
-      alert('Username saved successfully!');
-      setIsChatEnabled(true);
-    } catch (error) {
-      console.error('Error saving username:', error);
-      alert('Failed to save username. Please try again.');
-    }
-  };
 
   const generateRandomId = () => {
     const millisecondsSinceEpoch = Date.now();
@@ -33,13 +20,13 @@ const Home = () => {
 
     await setDoc(doc(db, "Conversations", convId), {
         convId: convId,
-        users: [username]
+        users: [currentUser?.uid]
       });
     
     setConvId(convId);
 
     if (convId) {
-      navigate(`/conversation/${convId}-${username}`);
+      navigate(`/conversation/${convId}-${currentUser?.uid}-${currentUser?.displayName}`);
     } else {
       alert('Please enter a valid conversation ID.');
     }
@@ -48,24 +35,30 @@ const Home = () => {
   const handleJoin = () => {
     
     if (convId) {
-      navigate(`/conversation/${convId}-${username}`);
+      navigate(`/conversation/${convId}-${currentUser?.uid}-${currentUser?.displayName}`);
     } else {
       alert('Please enter a valid conversation ID.');
     }
   };
 
+  const logGoogleUser = async () => {
+    const response = await signInWithGooglePopup();
+    setIsSignedIn(true);
+    console.log(response);
+  }
+
   return (
     <div>
-      <label htmlFor="username">Enter your username:</label>
-      <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <button onClick={handleSave}>Save</button>
+      {isSignedIn ? (
+        <>
+        <p>Welcome, {currentUser?.displayName}</p>
       <div>
-        <button style={{backgroundColor: isChatEnabled ? 'blue' : 'gray',
+        <button style={{backgroundColor: isSignedIn ? 'blue' : 'gray',
           color: 'white',
           border: 'none',
-          cursor: isChatEnabled ? 'pointer' : 'not-allowed'}}
+          cursor: isSignedIn ? 'pointer' : 'not-allowed'}}
           onClick={handleCreateChat}
-          disabled={!isChatEnabled}>
+          disabled={!isSignedIn}>
           Create Chat
         </button>
       </div>
@@ -73,6 +66,12 @@ const Home = () => {
         <input type="text" value={convId} onChange={(e) => setConvId(e.target.value)} placeholder="Enter conversation ID" />
         <button onClick={handleJoin}>Join</button>
       </div>
+      </>
+      ) : (
+        <div>
+            <button onClick={logGoogleUser}>Sign In With Google</button>
+      </div>
+      )}
     </div>
   );
 };
