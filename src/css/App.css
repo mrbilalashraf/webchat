@@ -11,6 +11,10 @@
   --border-radius: 30px;
 }
 
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
 /* Typography */
 
 ::selection {
@@ -47,6 +51,19 @@ h3 {
 
 ul {
   padding: 0;
+}
+
+.home {
+  display: flex;
+  width: 50%;
+}
+
+.home>.button {
+  align-self: flex-start;
+}
+
+.home>.message_input {
+  align-self: flex-end;
 }
 
 .list {

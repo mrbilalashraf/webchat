@@ -51,20 +51,22 @@ const Home = () => {
     <div>
       {isSignedIn ? (
         <>
-        <p>Welcome, {currentUser?.displayName}</p>
-      <div>
-        <button style={{backgroundColor: isSignedIn ? 'blue' : 'gray',
-          color: 'white',
-          border: 'none',
-          cursor: isSignedIn ? 'pointer' : 'not-allowed'}}
-          onClick={handleCreateChat}
-          disabled={!isSignedIn}>
-          Create Chat
-        </button>
-      </div>
-      <div>
-        <input type="text" value={convId} onChange={(e) => setConvId(e.target.value)} placeholder="Enter conversation ID" />
-        <button onClick={handleJoin}>Join</button>
+        <h1>Welcome, {currentUser?.displayName}</h1>
+      <div class="home">
+        <div >
+          <button className='button' style={{backgroundColor: isSignedIn ? 'blue' : 'gray',
+            color: 'white',
+            border: 'none',
+            cursor: isSignedIn ? 'pointer' : 'not-allowed'}}
+            onClick={handleCreateChat}
+            disabled={!isSignedIn}>
+            Create Chat
+          </button>
+        </div>
+        <div >
+          <input className='message_input' type="text" value={convId} onChange={(e) => setConvId(e.target.value)} placeholder="Enter conversation ID" />
+          <button onClick={handleJoin}>Join</button>
+        </div>
       </div>
       </>
       ) : (
