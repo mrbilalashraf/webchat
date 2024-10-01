@@ -67,7 +67,7 @@ else{
       {isSignedIn ? (
         <>
         <h1>Welcome, {currentUser?.displayName}</h1>
-      <div class="home">
+      <div className="home">
         <div >
           <button className='button' style={{backgroundColor: isSignedIn ? 'blue' : 'gray',
             color: 'white',

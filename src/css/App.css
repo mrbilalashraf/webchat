@@ -115,6 +115,23 @@ ul {
   padding-top: 10px;
 }
 
+.message-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Profile picture styling */
+.profile-pic-wrapper {
+  margin-right: 10px;
+}
+
+.profile-picture {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .message_sender {
   color: var(--color-primary);
   font-size: 1.3rem;

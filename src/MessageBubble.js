@@ -12,6 +12,7 @@ const MessageBubble = ({ sender, msg, time }) => {
       <span className='message_sender'>{sender}</span>
       <p>{msg}</p>
       <span className='message_time'>{formattedTime}</span>
+      <span></span>
     </div>
   );
 };

@@ -72,7 +72,7 @@ const Conversation = () => {
     <div className="conversation">
       <h2>Anonymous Chat</h2>
       <ul>
-      <TimeBadge messages={messages} userId={currentUser.uid} sender={currentUser.displayName} />
+      <TimeBadge messages={messages} userId={currentUser.uid} sender={currentUser.displayName} profile={currentUser.photoURL} />
       </ul>
       <form onSubmit={handleSendMessage}>
         <input className='message_input' type="text" name="message" placeholder="Message" />
