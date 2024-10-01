@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc, collection } from 'firebase/firestore';
+import { doc, getDoc,setDoc, onSnapshot } from 'firebase/firestore';
 import db from './firebase';
 import { signInWithGooglePopup } from './google_signin';
 import { AuthContext } from './AuthContext';
@@ -20,22 +20,38 @@ const Home = () => {
 
     await setDoc(doc(db, "Conversations", convId), {
         convId: convId,
-        users: [currentUser?.uid]
+        users: [{uid:currentUser.uid,displayName:currentUser.displayName,photoURL:currentUser.photoURL}]
       });
     
+    
+
     setConvId(convId);
 
     if (convId) {
-      navigate(`/conversation/${convId}-${currentUser?.uid}-${currentUser?.displayName}`);
+      navigate(`/conversation/${convId}`);
     } else {
       alert('Please enter a valid conversation ID.');
     }
   };
 
-  const handleJoin = () => {
+  const handleJoin = async () => {
+
+    const docRef = doc(db, "Conversations", convId);
+const docSnap = await getDoc(docRef);
+if(docSnap.data()!={} && docSnap.data()){
+  await setDoc(doc(db, "Conversations", convId), {
+    convId: convId,
+    users: [...docSnap.data().users, {uid:currentUser.uid,displayName:currentUser.displayName,photoURL:currentUser.photoURL}]
+  });
+  navigate(`/conversation/${convId}`);
+
+}
+else{
+  alert('Please enter a valid conversation ID.');
+  return;
+}
     
     if (convId) {
-      navigate(`/conversation/${convId}-${currentUser?.uid}-${currentUser?.displayName}`);
     } else {
       alert('Please enter a valid conversation ID.');
     }
@@ -44,7 +60,6 @@ const Home = () => {
   const logGoogleUser = async () => {
     const response = await signInWithGooglePopup();
     setIsSignedIn(true);
-    console.log(response);
   }
 
   return (

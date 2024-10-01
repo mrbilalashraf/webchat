@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import {onSnapshot, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect, useContext } from 'react';
+import {onSnapshot,doc, addDoc } from 'firebase/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import db from './firebase';
 import TimeBadge from './TimeBadge';
+import { AuthContext } from './AuthContext';
 
 const Conversation = () => {
   const [messages, setMessages] = useState([]);
-  const [userId, setUserId] = useState('');
-  const [username, setUserName] = useState('');
+  const { currentUser } = useContext(AuthContext);
 
   const currentUrl = window.location.href;
-  const subStrings = currentUrl.split('conversation/');
-  const conversationParams = subStrings[1];
-  const userParam = conversationParams.split('-');
-  const convId = userParam[0];
-  const uid = userParam[1];
-  console.log(userParam);
-  const unwantedChars = /[^a-zA-Z\s]/g;
-  const user = userParam[2].replace(unwantedChars, ' ').replace(/\s+/g, ' ');
+  const convId = currentUrl.split('conversation/')[1];
+  let users = [];
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "Conversations", convId), (doc) => {
+      if(doc.data() != {} && doc.data()) {
+        users = doc.data().users;
+      }
+    });
+
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     const messageQuery = convId
@@ -30,8 +34,6 @@ const Conversation = () => {
         setMessages(messagesData);
     });
 
-    setUserId(uid);
-    setUserName(user);
     return () => unsubscribe();
   }, [convId]);
 
@@ -53,8 +55,10 @@ const Conversation = () => {
     event.preventDefault();
     const messageText = event.target.elements.message.value;
 
-    const docRef = await addDoc(collection(db, "Messages"), {
-      senderId: userId,
+    if (!messageText) return;
+
+    await addDoc(collection(db, "Messages"), {
+      senderId: currentUser.uid,
       receiverId: null,
       msg: messageText,
       time: new Date().getTime(),
@@ -68,7 +72,7 @@ const Conversation = () => {
     <div className="conversation">
       <h2>Anonymous Chat</h2>
       <ul>
-      <TimeBadge messages={messages} userId={userId} sender={username} />
+      <TimeBadge messages={messages} userId={currentUser.uid} sender={currentUser.displayName} />
       </ul>
       <form onSubmit={handleSendMessage}>
         <input className='message_input' type="text" name="message" placeholder="Message" />
