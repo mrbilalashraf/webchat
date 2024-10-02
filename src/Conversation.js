@@ -8,15 +8,15 @@ import { AuthContext } from './AuthContext';
 const Conversation = () => {
   const [messages, setMessages] = useState([]);
   const { currentUser } = useContext(AuthContext);
+  const [users, setUsers] = useState([]);
 
   const currentUrl = window.location.href;
   const convId = currentUrl.split('conversation/')[1];
-  let users = [];
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "Conversations", convId), (doc) => {
       if(doc.data() != {} && doc.data()) {
-        users = doc.data().users;
+        setUsers(doc.data().users);
       }
     });
 
@@ -32,6 +32,7 @@ const Conversation = () => {
         const messagesData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id}));
         messagesData.sort((a,b) => a.time - b.time);
         setMessages(messagesData);
+        console.log("Messages are here: ", messagesData);
     });
 
     return () => unsubscribe();
@@ -72,7 +73,7 @@ const Conversation = () => {
     <div className="conversation">
       <h2>Anonymous Chat</h2>
       <ul>
-      <TimeBadge messages={messages} userId={currentUser.uid} sender={currentUser.displayName} profile={currentUser.photoURL} />
+      <TimeBadge messages={messages} users={users} userId={currentUser.uid} profile={currentUser.photoURL} />
       </ul>
       <form onSubmit={handleSendMessage}>
         <input className='message_input' type="text" name="message" placeholder="Message" />

@@ -1,7 +1,7 @@
 import MessageBubble from './MessageBubble';
 import { format, parseISO } from 'date-fns';
 
-const TimeBadge = ({ messages, userId, sender, profile }) => {
+const TimeBadge = ({ messages, users, userId, profile }) => {
   console.log("This is profile url", profile);
     function groupMessagesByDate(messages) {
         return messages.reduce((groups, message) => {
@@ -39,23 +39,26 @@ const TimeBadge = ({ messages, userId, sender, profile }) => {
           <div className="date-badge" >
             {formatDateLabel(date)}
           </div>
-          {groupedMessages[date].map((message) => (
+          {groupedMessages[date].map((message) => {
+            const sender = users.find((user) => user.uid === message.senderId);
+            return (
             <li className={`message ${message.senderId === userId ? 'message-right' : 'message-left'}`} key={message.id}>
               <div className="message-wrapper">
               <div className="profile-pic-wrapper">
                   <img
-                    src={profile}
+                    src={sender?.photoURL}
                     className="profile-picture"
                   />
                 </div>
                 <MessageBubble 
-                  sender={sender}             
+                  sender={sender?.displayName}             
                   msg={message.msg}
                   time={message.time}
                 />
               </div>
             </li>
-        ))}
+            );
+})}
         </div>
       ))}
     </div>
