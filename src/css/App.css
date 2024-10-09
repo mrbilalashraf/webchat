@@ -22,6 +22,13 @@
   color: #fff;
 }
 
+html, body {
+  font-family: 'Montserrat', sans-serif;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 html {
   font-size: 62.5%;
 }
@@ -53,9 +60,23 @@ ul {
   padding: 0;
 }
 
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login h1 {
+  margin-bottom: 4rem;
+}
+
 .home {
   display: flex;
-  width: 50%;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
 }
 
 .home>.button {
@@ -146,28 +167,55 @@ ul {
 }
 
 .message_input {
-  border-radius: 30px;
-  border: 2px solid #ffffffa9;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid #3a3a3aa9;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 5px;
+  margin: 0 2rem;
+  padding: 10px;
+}
+
+.message_input::placeholder {
+  text-align: center;
 }
 
 .message_input:focus {
   outline: none;
+  border: 1px solid var(--color-primary);
 }
 
-@media screen and (min-width: 768px) {
+/* @media screen and (min-width: 768px) {
   .message_input {
     width: 50%;
   }
-}
+} */
 
 .button {
   background: var(--color-primary);
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid var(--color-primary);
   color: white;
-  padding: 5px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.button:hover {
+  background-color: #357ae8;
+}
+
+.button-join {
+  border: none;
+  background: none;
+}
+
+.button-join.active {
+  color: #2584ff;
+  cursor: pointer;
+}
+
+.button-join.inactive {
+  color: #3a3a3aa9;
+  cursor: default;
 }
 
 .button:focus {

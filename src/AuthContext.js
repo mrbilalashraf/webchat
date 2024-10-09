@@ -7,11 +7,13 @@ const AuthContext = createContext({
   currentUser: null,
   isSignedIn: false,
   setIsSignedIn: () => {},
+  loading: true
 });
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const auth = getAuth();
 
   useEffect(() => {
@@ -28,11 +30,12 @@ const AuthProvider = ({ children }) => {
         }
       setCurrentUser(user);
       setIsSignedIn(!!user);
+      setLoading(false);
     });
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, isSignedIn, setIsSignedIn }}>
+    <AuthContext.Provider value={{ currentUser, isSignedIn, setIsSignedIn, loading }}>
       {children}
     </AuthContext.Provider>
   );
