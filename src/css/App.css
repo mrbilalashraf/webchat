@@ -87,6 +87,143 @@ ul {
   align-self: flex-end;
 }
 
+/* Parent container to hold the chat layout */
+.conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full height of the view */
+  background-color: #f9f9f9;
+}
+
+/* Header styling */
+.chat-header {
+  padding: 10px;
+  background-color: var(--color-primary); /* Teams-like header color */
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Chat body styling (scrollable area) */
+.chat-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto; /* Allows messages to scroll */
+  background-color: white;
+}
+
+/* Scrollbar styling for WebKit browsers (Chrome, Safari, Edge) */
+.chat-body::-webkit-scrollbar {
+  width: 8px; /* Set scrollbar width */
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary); /* Thumb color */
+  border-radius: 10px; /* Rounded scrollbar */
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track color */
+  border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-secondary); /* Change thumb color on hover */
+}
+
+/* Scrollbar styling for Firefox */
+.chat-body {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: var(--color-primary) #f1f1f1; /* Thumb and track colors */
+}
+
+/* Responsive scrollbar */
+@media screen and (max-width: 768px) {
+  .chat-body::-webkit-scrollbar {
+    width: 5px; /* Make the scrollbar thinner on smaller screens */
+  }
+
+  .chat-body::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+  }
+}
+
+
+/* Footer styling */
+.chat-footer {
+  padding: 10px;
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+
+/* Container for input and button side by side */
+.footer-input-container {
+  display: flex;
+  width: 100%;
+  max-width: 600px; /* Adjust this as needed */
+  align-items: center;
+}
+
+.textarea-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.growing-textarea {
+  width: 100%;
+  padding: 10px 40px 10px 10px; /* Add padding to make space for the icon */
+  border-radius: 5px;
+  resize: none; /* Disable manual resizing */
+  min-height: 40px;
+  max-height: 150px;
+  overflow: hidden; /* Hide overflow */
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.send-icon {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  background-image: url('../images/send.png');
+  background-size: cover;
+  border: none; /* Remove any border */
+  background-color: transparent; /* Ensure background is transparent */
+  padding: 0;
+  margin: 0;
+}
+
+.send-icon::after {
+  content: 'Send';
+  position: absolute;
+  bottom: 120%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.send-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+
 .list {
   display: flex;
   flex-direction: column;
@@ -96,7 +233,6 @@ ul {
 
 .date-badge {
   align-self: center;
-  max-width: 10vw;
   width: fit-content;
   background: #71c4f5;
   border-radius: 5px;
@@ -111,11 +247,13 @@ ul {
   border-radius: 5px;
   margin-bottom: 5px;
   padding: 10px;
-  margin: 0 2rem;
-  max-width: 70vw;
+  margin: 0.3rem 2rem;
+  max-width: 85%;
   width: fit-content;
   word-wrap: break-word;
+  word-break: break-word;
   position: relative;
+  overflow: hidden;
 }
 
 .message-right {
@@ -132,8 +270,10 @@ ul {
 
 .message p {
   margin: 0;
+  padding: 0;
   padding-right: 50px;
   padding-top: 10px;
+  overflow-wrap: break-word;
 }
 
 .message-wrapper {
@@ -199,6 +339,11 @@ ul {
   padding: 10px;
 }
 
+.button-send {
+  height: 40px; /* Fixed height to align with the initial textarea height */
+  flex-shrink: 0;
+}
+
 .button:hover {
   background-color: #357ae8;
 }
@@ -220,4 +365,59 @@ ul {
 
 .button:focus {
   outline: none;
+}
+
+/* Responsive design for small screens */
+@media screen and (max-width: 768px) {
+  /* Adjusting the message bubble for small screens */
+  .message {
+    max-width: 100%; /* Full width on mobile */
+    margin: 3px 10px; /* Add some margin for better appearance on small screens */
+  }
+
+  /* Adjusting profile picture size on small screens */
+  .profile-picture {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* Adjust the time badge on smaller screens */
+  .date-badge {
+    max-width: 60vw;
+    font-size: 1.2rem;
+  }
+
+  .message p {
+    padding-right: 30px; /* Less padding on mobile for time label */
+  }
+
+  .message_time {
+    font-size: 1.1rem;
+    right: 5px;
+  }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 576px) {
+  /* Adjusting message padding and text size */
+  .message {
+    padding: 8px;
+    margin: 0.3rem 1rem;
+  }
+
+  .message p {
+    font-size: 1.4rem;
+  }
+
+  /* Further reducing the time badge size */
+  .date-badge {
+    max-width: 70vw;
+    font-size: 1.1rem;
+  }
+
+  /* Profile picture even smaller */
+  .profile-picture {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }

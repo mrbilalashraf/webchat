@@ -12,18 +12,24 @@ function Login() {
     const handleSignIn = async () => {
         setIsAuthenticating(true);
         try {
-        await signInWithGooglePopup();
-        setIsSignedIn(true);
-        navigate('/');
+            const response = await signInWithGooglePopup();
+            setIsAuthenticating(false);
+            if (response.success) {
+                setIsSignedIn(true);
+                navigate('/');
+            }
+            else
+                setIsSignedIn(false);
+            
         } catch (error) {
-        console.error('Error during sign-in: ', error);
-        setIsAuthenticating(false);
+            setIsAuthenticating(false);
         }
     };
 
     if (isAuthenticating) {
         return <SplashScreen />;
     }
+
     return (
       <div className='login'>
         <h1>Please Sign In</h1>

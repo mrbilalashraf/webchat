@@ -9,7 +9,7 @@ const MessageBubble = ({ sender, msg, time }) => {
 
   return (
     <div>
-      <span className='message_sender'>{sender}</span>
+      {sender && <span className='message_sender'>{sender}</span>}
       <p>{msg}</p>
       <span className='message_time'>{formattedTime}</span>
     </div>

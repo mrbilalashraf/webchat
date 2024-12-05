@@ -18,7 +18,6 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-        console.log('User: ', user);
         if (user) {
             await setDoc(doc(db, "Users", user?.uid), {
                 uid: user?.uid,
@@ -26,7 +25,7 @@ const AuthProvider = ({ children }) => {
                 email: user?.email,
                 emailVerified: user?.emailVerified,
                 photoURL: user?.photoURL
-              });        
+              }); 
         }
       setCurrentUser(user);
       setIsSignedIn(!!user);

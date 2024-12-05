@@ -44,14 +44,14 @@ const TimeBadge = ({ messages, users, userId, profile }) => {
             return (
             <li className={`message ${message.senderId === userId ? 'message-right' : 'message-left'}`} key={message.id}>
               <div className="message-wrapper">
-              <div className="profile-pic-wrapper">
+              {message.senderId !== userId && (<div className="profile-pic-wrapper">
                   <img
                     src={sender?.photoURL}
                     className="profile-picture"
                   />
-                </div>
+                </div>)}
                 <MessageBubble 
-                  sender={sender?.displayName}             
+                  sender={message.senderId !== userId ? sender?.displayName : null}      
                   msg={message.msg}
                   time={message.time}
                 />

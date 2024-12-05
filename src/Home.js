@@ -1,13 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc,setDoc } from 'firebase/firestore';
 import db from './firebase';
 import { AuthContext } from './AuthContext';
+import SplashScreen from './SplashScreen';
 
 const Home = () => {
   const { currentUser } = useContext(AuthContext);
   const [convId, setConvId] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsLoading(false);
+    }
+  }, [currentUser]);
 
   const generateRandomId = () => {
     const millisecondsSinceEpoch = Date.now();
@@ -53,6 +61,10 @@ const Home = () => {
     }
     
   };
+
+  if (isLoading) {
+    return <><SplashScreen/></>;
+  }
 
   return (
     <div>
